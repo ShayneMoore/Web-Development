@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<h1>Web Service</h1>
+	<div class ="row">
+		<div class="col-md-6">
+				Departure City <input type="text" name="dep_city" id="dep_city">
+			<input type="submit" name="search" value="search" onclick="ajax_post()">
+			<div id="table"></div>
+		</div>
+		<div class="col-md-6">
+			Enter a Ticker: <input type="text" name="dep_city" id="ticker"></br>
+			<input type="submit" value="GO" onclick="useExternalWS()">
+			<div id="response"></div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript"> 
+
+
+	function ajax_post(){ // Create our XMLHttpRequest object
+
+		var hr = new XMLHttpRequest(); // Create some variables we need to send to our PHP file
+		var url = "client.php"; 
+		var dc = document.getElementById("dep_city").value; 
+		var vars = "dep_city="+dc;
+		hr.open("POST", url, true); // Set content type header information for sending url encoded variables in the request
+		hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // Access the onreadystatechange event for the XMLHttpRequest object
+		
+		hr.onreadystatechange = function() {
+			if(hr.readyState == 4 && hr.status == 200) { 
+				var return_data = hr.responseText;
+				document.getElementById("table").innerHTML = return_data;
+			}
+		} // Send the data to PHP now... and wait for response to update the status div
+		hr.send(vars); // Actually execute the request	
+	} 
+
+
+
+
+
+
+function useExternalWS(){
+		var hr = new XMLHttpRequest(); // Create some variables we need to send to our PHP file
+		var url = "externalWS.php"; 
+		var ticker = document.getElementById("ticker").value; 
+		var vars = "ticker="+ticker;
+		hr.open("POST", url, true); // Set content type header information for sending url encoded variables in the request
+		hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // Access the onreadystatechange event for the XMLHttpRequest object
+		hr.onreadystatechange = function() {
+			if(hr.readyState == 4 && hr.status == 200) { 
+				var return_data = hr.responseText;
+				document.getElementById("response").innerHTML = return_data;
+			}
+		} // Send the data to PHP now... and wait for response to update the status div
+		hr.send(vars); // Actually execute the request
+}
+</script>
